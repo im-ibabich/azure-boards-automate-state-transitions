@@ -8,6 +8,9 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  buildPlatform: 'Any CPU'
+
 steps:
 - task: UseDotNet@2
   inputs:
@@ -20,11 +23,12 @@ steps:
     projects: 'src'
     feedsToUse: 'select'
 
-- task: DotNetCoreCLI@2
+- task: VSBuild@1
   inputs:
-    command: 'build'
-    projects: 'src'
-    arguments: '--configuration Release'
+    solution: 'src/*.sln'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: 'Release'
 
 - task: DotNetCoreCLI@2
   inputs:
@@ -32,16 +36,8 @@ steps:
     projects: 'src'
     arguments: '--configuration Release'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)/s/src/AutoStateTransitions/bin/Release/netcoreapp3.1/'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: '$(Build.BuildId).zip'
+    ArtifactName: 'drop'
     publishLocation: 'Container'
