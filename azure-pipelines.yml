@@ -40,11 +40,11 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/drop'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/web.zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/drop/web.zip'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop/web.zip'
     ArtifactName: 'web.zip'
     publishLocation: 'Container'
