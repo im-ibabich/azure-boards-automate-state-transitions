@@ -31,3 +31,17 @@ steps:
     command: 'test'
     projects: 'src'
     arguments: '--configuration Release'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: 
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: '$(Build.BuildId).zip'
+    publishLocation: 'Container'
