@@ -1,4 +1,4 @@
-name: Automate State Transitions CI
+#name: Automate State Transitions CI
 
 pr:
   branches:
